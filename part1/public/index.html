@@ -1,0 +1,48 @@
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.85em;
+}
+
+#tweets {
+    padding: 5px;
+}
+</style>
+
+<br>
+<div class="card">
+    <img src="img.jpg" alt="John" style="width:40%" id="profile">
+    <h1 id="thename">John Doe</h1>
+    <!--<p class="title">Author & Founder</p>-->
+    <p id="description">Harvard University</p>
+    <br/>
+
+    <div id="tweets"></div>
+</div>
+
+<script>
+    let user = {};
+    fetch('/tweets').then(res => res.json()).then(res => {
+        if (res && res.length > 0) {
+            user = res[0].user;
+            console.log(user);
+
+            let text = '<hr>';
+            for (let i = 0; i < res.length; i++) {
+                text += `<p>${res[i].text}</p>`;
+            }
+            text += '<hr>';
+            document.getElementById('tweets').innerHTML = text;
+            document.getElementById('profile').setAttribute('src', user.profile_image_url_https);
+            document.getElementById('thename').innerText = user.name;
+            document.getElementById('description').innerText = user.description;
+        }
+    })
+</script>

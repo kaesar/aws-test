@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  SetPortfolioFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.setPortfolio
+      Runtime: nodejs12.x
+      CodeUri: ./mytest
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref Portfolio
+      Environment:
+        Variables:
+          PORTFOLIO_TABLE: !Ref Portfolio
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /mytest
+            Method: POST
+
+  GetPortfolioFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.getPortfolio
+      Runtime: nodejs12.x
+      CodeUri: ./mytest
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref Portfolio
+      Environment:
+        Variables:
+          PORTFOLIO_TABLE: !Ref Portfolio
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /mytest
+            Method: GET
+  
+  Portfolio:
+    Type: AWS::Serverless::SimpleTable
+
+Outputs:
+  MyApi:
+    Description: "Endpoint for API Gateway"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/mytest/"
